@@ -18,6 +18,7 @@ extern "C"
 #define ENABLE  1
 #define MAX_IP_LEN 16
 #define MAX_STRING_INPUT 100
+#define MAX_NETWORK_TYPE_LEN 10
 
 #define IFTTT_ALERT_URL  "http://maker.ifttt.com/trigger/"
 
@@ -28,14 +29,24 @@ extern "C"
 #define MAX_DEAUTH_PKT 20
 #define ALERT_FREQ 60000
 
-#define HEARTBEAT_FREQ 300000
+#define HEARTBEAT_FREQ 30000
 
 #define IS_EVILTWIN_ATTACK	1
 #define IS_DEAUTH_ATTACK	2
+#define IS_GEOFENCE_ATTACK 3
 
 #define ALERT_STANDALONE 1
 #define ALERT_WIFI_SERVER 2
 #define ALERT_NRF 3
+
+#define OPERATION_DETECTION_MODE 1
+#define OPERATION_PROTECTION_MODE 2
+
+#define NORTH 1
+#define SOUTH 2
+#define WEST 3
+#define EAST 4
+
 
 
 extern uint8_t set_channel;
@@ -80,6 +91,7 @@ struct protect_ap_info
     char SSID[MAX_SSID_LEN];
     char BSSID_lower[MAC_LEN_FMT];
     char BSSID_upper[MAC_LEN_FMT];
+    char NETWORK_type[MAX_NETWORK_TYPE_LEN];
 };
 
 extern struct captured_packet_info
@@ -104,6 +116,7 @@ struct ifttt_info
     char ifttt_key[MAX_STRING_INPUT] = "";
     char ifttt_eventName_eviltwin[MAX_STRING_INPUT] = "";
     char ifttt_eventName_deauth[MAX_STRING_INPUT] = "";
+    char ifttt_eventName_geofence[MAX_STRING_INPUT] = "";
 };
 
 struct alert_server_info
@@ -126,8 +139,10 @@ extern struct sensor_config_info
 {
     uint8_t isConfigured = -1;
     uint8_t id = 0;
+  //  uint8_t sensor_location = -1;
     struct protect_ap_info protect_ap_info;
     uint8_t alert_mode = -1;
+    uint8_t operation_mode = -1;
     struct connect_ap_info connect_ap_info;
     struct ifttt_info ifttt_info;
     struct alert_server_info alert_server_info;
@@ -175,6 +190,13 @@ const char Sensor_config_web[] PROGMEM = R"=====(
       border-radius: 15px;
       background-color: #eeeeee
     }
+
+    select {
+      display: table-cell;
+      padding:8px;
+      border-radius: 15px;
+      background-color: #eeeeee
+    }
     
     input:focus{
       border-radius: 15px;
@@ -217,8 +239,25 @@ const char Sensor_config_web[] PROGMEM = R"=====(
     <script type="text/javascript">
          window.onload = function() {
           document.getElementById('alert_server').style.display = 'none';
+          operation_modeCheck();
+          alert_modeCheck();
     }
     
+    function operation_modeCheck() {
+      if (document.getElementById('Alert_Mode-IFTTT').checked) {
+        if (document.getElementById('Operation_Mode-DETECT').checked) {
+            document.getElementById('difttt_evilt').style.display = 'table-row';
+            document.getElementById('difttt_deauth').style.display = 'table-row';
+            document.getElementById('difttt_geofence').style.display = 'none';
+        }       
+        else if(document.getElementById('Operation_Mode-PROTECT').checked) {
+            document.getElementById('difttt_evilt').style.display = 'none';
+            document.getElementById('difttt_deauth').style.display = 'none';
+            document.getElementById('difttt_geofence').style.display = 'table-row';
+        }
+      }
+    }
+
     function alert_modeCheck() {
         if (document.getElementById('Alert_Mode-IFTTT').checked) {
             document.getElementById('alert_server').style.display = 'none';
@@ -226,14 +265,18 @@ const char Sensor_config_web[] PROGMEM = R"=====(
             document.getElementById('difttt_key').style.display = 'table-row';
             document.getElementById('difttt_evilt').style.display = 'table-row';
             document.getElementById('difttt_deauth').style.display = 'table-row';
+            document.getElementById('difttt_geofence').style.display = 'table-row';
         }       
         else if(document.getElementById('Alert_Mode-SERVER').checked) {
             document.getElementById('alert_server').style.display = 'table-row';
             document.getElementById('difttt_key').style.display = 'none';
             document.getElementById('difttt_evilt').style.display = 'none';
             document.getElementById('difttt_deauth').style.display = 'none';
-       }
+            document.getElementById('difttt_geofence').style.display = 'none';
+        }
+        operation_modeCheck();
     }
+    
     
     </script>
     </head>
@@ -255,6 +298,14 @@ const char Sensor_config_web[] PROGMEM = R"=====(
       <label class="col-md-4" for="protect_SSID">SSID To Protect</label>  
       <input id="protect_SSID" name="protect_SSID" type="text" placeholder="Protect_SSID" title="SSID you want to protect" required="" size="32" maxlength="32">
     </div>
+
+    <div class="form-group">
+      <label class="col-md-4" for="protect_SSID_TYPE">Type Of WiFi Network</label>  
+      <select id="protect_SSID_TYPE" name="protect_SSID_TYPE">
+        <option value="open">Open</option>
+        <option value="encrypted">Encrypted</option>
+      </select>
+    </div>
     
     <div class="form-group">
       <label class="col-md-4" for="connect_SSID">Connection SSID</label>  
@@ -266,6 +317,22 @@ const char Sensor_config_web[] PROGMEM = R"=====(
        <input id="connect_PASSWORD" name="connect_PASSWORD" type="password" placeholder="Connect_PASSWORD" title="Password of SSID to use for sending alerts" required="" size="32" maxlength="32">
     </div>
     
+  <div class="form-group">
+      <label class="col-md-4" for="Operation_Mode">ANWI Operation Mode</label>
+      <div class="radio">
+        <label for="Operation_Mode-0">
+          <input type="radio" name="Operation_Mode" id="Operation_Mode-DETECT" onclick="javascript:operation_modeCheck();" value="1" checked="checked" title="Detection Mode">
+          Detection Mode (Detects attacks like EvilTwin, DeAuth)
+        </label>
+        </div>
+      <div class="radio">
+        <label for="Operation_Mode-1">
+          <input type="radio" name="Operation_Mode" id="Operation_Mode-PROTECT"  onclick="javascript:operation_modeCheck();" value="2"  title="Protection Mode">
+          Protection Mode (Disables unauthorized WiFi access points & protects WiFi router by creating GeoFence)
+        </label>
+      </div>
+    </div>
+
     <div class="form-group">
       <label class="col-md-4" for="Alert_Mode">Alert Mode</label>
       <div class="radio">
@@ -292,9 +359,14 @@ const char Sensor_config_web[] PROGMEM = R"=====(
       <input id="ifttt_eventName_eviltwin" name="ifttt_eventName_eviltwin" type="text" placeholder="" title="EvilTwin attack trigger name" size="32" maxlength="32">
     </div>
     
-     <div class="form-group" id="difttt_deauth">
+    <div class="form-group" id="difttt_deauth">
       <label class="col-md-4" for="ifttt_eventName_deauth">Deauth attack trigger name</label>  
       <input id="ifttt_eventName_deauth" name="ifttt_eventName_deauth" type="text" placeholder="" title="Deauthentication attack trigger name" size="32" maxlength="32">
+    </div>
+
+    <div class="form-group" id="difttt_geofence">
+      <label class="col-md-4" for="ifttt_eventName_geofence">Geofence protection trigger name</label>  
+      <input id="ifttt_eventName_geofence" name="ifttt_eventName_geofence" type="text" placeholder="" title="Geofence protection trigger name" size="32" maxlength="32">
      </div>
     
     <div class="form-group" id="alert_server">

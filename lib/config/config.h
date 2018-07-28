@@ -2,6 +2,7 @@
 #define _CONFIG_H_
 
 void config_sensor_manually();
+void config_sensor_json();
 void get_config_settings();
 void print_config();
 void save_config_settings();
