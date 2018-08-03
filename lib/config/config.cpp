@@ -3,10 +3,9 @@
 #include <EEPROM.h>
 #include <ESP8266WebServer.h>
 #include "config.h"
-#include "..\global_vars.h"
+#include <..\global_vars.h>
 
 struct sensor_config_info sensor_config;
-
 
 ESP8266WebServer server(80);
 
@@ -77,7 +76,7 @@ void print_config()
 {
     Serial.print("Sensor ID : ");
     Serial.println(sensor_config.id);
-  /*
+  
     Serial.print("Sensor Location : ");
     switch(sensor_config.sensor_location)
     {
@@ -94,7 +93,7 @@ void print_config()
             Serial.println("EAST");
         break;
     }
-    */
+  
     Serial.print("SSID To Protect : ");
     Serial.println(sensor_config.protect_ap_info.SSID);
     Serial.print("BSSID To Protect : ");
@@ -195,8 +194,8 @@ void config_sensor_json()
         tmp_str = root.get<String>("id");
         sensor_config.id = tmp_str.toInt();
 
-       // tmp_str = root.get<String>("sensor_location");
-        //sensor_config.sensor_location = tmp_str.toInt();
+        tmp_str = root.get<String>("sensor_location");
+        sensor_config.sensor_location = tmp_str.toInt();
 
         tmp_str = root.get<String>("protect_SSID");
         tmp_str.toCharArray(sensor_config.protect_ap_info.SSID,tmp_str.length() + 1);
@@ -250,7 +249,7 @@ void config_sensor_json()
         }
         sensor_config.isConfigured = 1;
         save_config_settings();
-   //     print_config();
+        print_config();
         
     }
 

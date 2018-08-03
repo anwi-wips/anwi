@@ -139,7 +139,7 @@ extern struct sensor_config_info
 {
     uint8_t isConfigured = -1;
     uint8_t id = 0;
-  //  uint8_t sensor_location = -1;
+    uint8_t sensor_location = -1;
     struct protect_ap_info protect_ap_info;
     uint8_t alert_mode = -1;
     uint8_t operation_mode = -1;
