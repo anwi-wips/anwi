@@ -1,0 +1,7 @@
+# Image Credits
+
+All images courtesy of Unsplash (https://unsplash.com).
+
+- Redd Angelo (https://unsplash.com/photos/h34WJ4T9uhw)
+- Nirzar Pangarkar (https://unsplash.com/photos/EKjJSbVI7rk)
+- Maxim Polishtchouk (https://unsplash.com/photos/N6q6wtJ_mkA)

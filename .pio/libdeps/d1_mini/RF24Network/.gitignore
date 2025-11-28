@@ -1,0 +1,33 @@
+16000000/
+8000000/
+out/
+docs/html/
+docs/sphinx/xml/
+docs/_build/
+.*.swp
+.*.swo
+Session.vim
+*.swp
+*.swo
+version.h
+*.orig
+*.bak
+PINS_*/
+*.exe
+build/
+.vscode/
+*CMakeUserPresets*.json
+*.tar.gz
+*env/
+*.egg-info/
+
+# Cmake build-in-source generated stuff
+CMakeCache.txt
+CPackConfig.cmake
+CPackSourceConfig.cmake
+CMakeFiles
+DEBIAN
+cmake_install.cmake
+compile_commands.json
+# Makefile is modified when `cmake .` is run
+# Makefile # preserve old/traditional build system
