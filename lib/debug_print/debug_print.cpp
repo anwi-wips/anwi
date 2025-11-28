@@ -33,15 +33,17 @@ void debug_print_deauth() {
   Serial.println(pkt_info.channel);
 
   Serial.print("SRC MAC ");
-  sprintf(mac, MACSTR, MAC2STR(pkt_info.frame_hdr.source_address));
+  snprintf(mac, sizeof(mac), MACSTR,
+           MAC2STR(pkt_info.frame_hdr.source_address));
   Serial.println(mac);
 
   Serial.print("DST MAC ");
-  sprintf(mac, MACSTR, MAC2STR(pkt_info.frame_hdr.destination_address));
+  snprintf(mac, sizeof(mac), MACSTR,
+           MAC2STR(pkt_info.frame_hdr.destination_address));
   Serial.println(mac);
 
   Serial.print("BSSID MAC ");
-  sprintf(mac, MACSTR, MAC2STR(pkt_info.frame_hdr.bssid_address));
+  snprintf(mac, sizeof(mac), MACSTR, MAC2STR(pkt_info.frame_hdr.bssid_address));
   Serial.println(mac);
 
   if (pkt_info.is_disassoc_detected) {

@@ -68,16 +68,18 @@ void alert_nrf() {
 
   // root["sensor_location"] = sensor_config.sensor_location;
 
-  sprintf(bssid_mac, MACSTR, MAC2STR(pkt_info.frame_hdr.bssid_address));
+  snprintf(bssid_mac, sizeof(bssid_mac), MACSTR,
+           MAC2STR(pkt_info.frame_hdr.bssid_address));
 
   // root["bssid_mac"] = bssid_mac;
   root["rssi"] = pkt_info.rssi;
   root["attack_type"] = pkt_info.attack_type;
   root["channel"] = pkt_info.channel;
-  sprintf(dest_address, MACSTR,
-          MAC2STR(pkt_info.frame_hdr.destination_address));
+  snprintf(dest_address, sizeof(dest_address), MACSTR,
+           MAC2STR(pkt_info.frame_hdr.destination_address));
   // root["destination_address"] = dest_address;
-  sprintf(src_address, MACSTR, MAC2STR(pkt_info.frame_hdr.source_address));
+  snprintf(src_address, sizeof(src_address), MACSTR,
+           MAC2STR(pkt_info.frame_hdr.source_address));
   // root["source_address"] = src_address;
   root["sensor_location"] = "CORE";
 
@@ -208,15 +210,17 @@ void alert_server() {
   root["id"] = sensor_config.id;
   root["sensor_location"] = sensor_config.sensor_location;
 
-  sprintf(bssid_mac, MACSTR, MAC2STR(pkt_info.frame_hdr.bssid_address));
+  snprintf(bssid_mac, sizeof(bssid_mac), MACSTR,
+           MAC2STR(pkt_info.frame_hdr.bssid_address));
   root["bssid_mac"] = bssid_mac;
   root["rssi"] = pkt_info.rssi;
   root["attack_type"] = pkt_info.attack_type;
   root["channel"] = pkt_info.channel;
-  sprintf(dest_address, MACSTR,
-          MAC2STR(pkt_info.frame_hdr.destination_address));
+  snprintf(dest_address, sizeof(dest_address), MACSTR,
+           MAC2STR(pkt_info.frame_hdr.destination_address));
   root["destination_address"] = dest_address;
-  sprintf(src_address, MACSTR, MAC2STR(pkt_info.frame_hdr.source_address));
+  snprintf(src_address, sizeof(src_address), MACSTR,
+           MAC2STR(pkt_info.frame_hdr.source_address));
   root["source_address"] = src_address;
 
   if (pkt_info.attack_type == IS_EVILTWIN_ATTACK) {

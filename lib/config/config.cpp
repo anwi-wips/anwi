@@ -226,23 +226,23 @@ void config_sensor_json() {
 
     tmp_str = root.get<String>("protect_SSID");
     tmp_str.toCharArray(sensor_config.protect_ap_info.SSID,
-                        tmp_str.length() + 1);
+                        sizeof(sensor_config.protect_ap_info.SSID));
 
     tmp_str = root.get<String>("protect_BSSID");
     tmp_str.toLowerCase();
     tmp_str.toCharArray(sensor_config.protect_ap_info.BSSID_lower,
-                        tmp_str.length() + 1);
+                        sizeof(sensor_config.protect_ap_info.BSSID_lower));
     tmp_str.toUpperCase();
     tmp_str.toCharArray(sensor_config.protect_ap_info.BSSID_upper,
-                        tmp_str.length() + 1);
+                        sizeof(sensor_config.protect_ap_info.BSSID_upper));
 
     tmp_str = root.get<String>("connect_SSID");
     tmp_str.toCharArray(sensor_config.connect_ap_info.SSID,
-                        tmp_str.length() + 1);
+                        sizeof(sensor_config.connect_ap_info.SSID));
 
     tmp_str = root.get<String>("connect_PASSWORD");
     tmp_str.toCharArray(sensor_config.connect_ap_info.PASSWORD,
-                        tmp_str.length() + 1);
+                        sizeof(sensor_config.connect_ap_info.PASSWORD));
 
     tmp_str = root.get<String>("op_mode");
     sensor_config.operation_mode = tmp_str.toInt();
@@ -252,26 +252,29 @@ void config_sensor_json() {
     case 1: // Alert_Mode-IFTTT
       tmp_str = root.get<String>("ifttt_key");
       tmp_str.toCharArray(sensor_config.ifttt_info.ifttt_key,
-                          tmp_str.length() + 1);
+                          sizeof(sensor_config.ifttt_info.ifttt_key));
       if (sensor_config.operation_mode == OPERATION_DETECTION_MODE) {
         tmp_str = root.get<String>("ifttt_eventName_eviltwin");
-        tmp_str.toCharArray(sensor_config.ifttt_info.ifttt_eventName_eviltwin,
-                            tmp_str.length() + 1);
+        tmp_str.toCharArray(
+            sensor_config.ifttt_info.ifttt_eventName_eviltwin,
+            sizeof(sensor_config.ifttt_info.ifttt_eventName_eviltwin));
 
         tmp_str = root.get<String>("ifttt_eventName_deauth");
-        tmp_str.toCharArray(sensor_config.ifttt_info.ifttt_eventName_deauth,
-                            tmp_str.length() + 1);
+        tmp_str.toCharArray(
+            sensor_config.ifttt_info.ifttt_eventName_deauth,
+            sizeof(sensor_config.ifttt_info.ifttt_eventName_deauth));
       } else if (sensor_config.operation_mode == OPERATION_PROTECTION_MODE) {
         tmp_str = root.get<String>("ifttt_eventName_geofence");
-        tmp_str.toCharArray(sensor_config.ifttt_info.ifttt_eventName_geofence,
-                            tmp_str.length() + 1);
+        tmp_str.toCharArray(
+            sensor_config.ifttt_info.ifttt_eventName_geofence,
+            sizeof(sensor_config.ifttt_info.ifttt_eventName_geofence));
       }
       sensor_config.alert_mode = ALERT_STANDALONE;
       break;
     case 2: // Alert_Mode-SERVER
       tmp_str = root.get<String>("server_ip");
       tmp_str.toCharArray(sensor_config.alert_server_info.server_ip,
-                          tmp_str.length() + 1);
+                          sizeof(sensor_config.alert_server_info.server_ip));
       sensor_config.alert_mode = ALERT_WIFI_SERVER;
       break;
     case 3:
@@ -439,24 +442,26 @@ void save_settings() {
   // sensor_config.sensor_location = tmp_str.toInt();
 
   tmp_str = server.arg("protect_SSID");
-  tmp_str.toCharArray(sensor_config.protect_ap_info.SSID, tmp_str.length() + 1);
+  tmp_str.toCharArray(sensor_config.protect_ap_info.SSID,
+                      sizeof(sensor_config.protect_ap_info.SSID));
 
   tmp_str = server.arg("protect_BSSID");
 
   tmp_str.toLowerCase();
   tmp_str.toCharArray(sensor_config.protect_ap_info.BSSID_lower,
-                      tmp_str.length() + 1);
+                      sizeof(sensor_config.protect_ap_info.BSSID_lower));
 
   tmp_str.toUpperCase();
   tmp_str.toCharArray(sensor_config.protect_ap_info.BSSID_upper,
-                      tmp_str.length() + 1);
+                      sizeof(sensor_config.protect_ap_info.BSSID_upper));
 
   tmp_str = server.arg("connect_SSID");
-  tmp_str.toCharArray(sensor_config.connect_ap_info.SSID, tmp_str.length() + 1);
+  tmp_str.toCharArray(sensor_config.connect_ap_info.SSID,
+                      sizeof(sensor_config.connect_ap_info.SSID));
 
   tmp_str = server.arg("connect_PASSWORD");
   tmp_str.toCharArray(sensor_config.connect_ap_info.PASSWORD,
-                      tmp_str.length() + 1);
+                      sizeof(sensor_config.connect_ap_info.PASSWORD));
 
   tmp_str = server.arg("Alert_Mode");
   alert_mode = tmp_str.toInt();
@@ -469,36 +474,41 @@ void save_settings() {
   case 1: // Alert_Mode-IFTTT
     tmp_str = server.arg("ifttt_key");
     tmp_str.toCharArray(sensor_config.ifttt_info.ifttt_key,
-                        tmp_str.length() + 1);
+                        sizeof(sensor_config.ifttt_info.ifttt_key));
 
     tmp_str = server.arg("ifttt_eventName_eviltwin");
-    tmp_str.toCharArray(sensor_config.ifttt_info.ifttt_eventName_eviltwin,
-                        tmp_str.length() + 1);
+    tmp_str.toCharArray(
+        sensor_config.ifttt_info.ifttt_eventName_eviltwin,
+        sizeof(sensor_config.ifttt_info.ifttt_eventName_eviltwin));
 
     tmp_str = server.arg("ifttt_eventName_deauth");
-    tmp_str.toCharArray(sensor_config.ifttt_info.ifttt_eventName_deauth,
-                        tmp_str.length() + 1);
+    tmp_str.toCharArray(
+        sensor_config.ifttt_info.ifttt_eventName_deauth,
+        sizeof(sensor_config.ifttt_info.ifttt_eventName_deauth));
     sensor_config.alert_mode = ALERT_STANDALONE;
 
     if (operation_mode == OPERATION_DETECTION_MODE) {
       tmp_str = server.arg("ifttt_eventName_eviltwin");
-      tmp_str.toCharArray(sensor_config.ifttt_info.ifttt_eventName_eviltwin,
-                          tmp_str.length() + 1);
+      tmp_str.toCharArray(
+          sensor_config.ifttt_info.ifttt_eventName_eviltwin,
+          sizeof(sensor_config.ifttt_info.ifttt_eventName_eviltwin));
 
       tmp_str = server.arg("ifttt_eventName_deauth");
-      tmp_str.toCharArray(sensor_config.ifttt_info.ifttt_eventName_deauth,
-                          tmp_str.length() + 1);
+      tmp_str.toCharArray(
+          sensor_config.ifttt_info.ifttt_eventName_deauth,
+          sizeof(sensor_config.ifttt_info.ifttt_eventName_deauth));
     } else if (operation_mode == OPERATION_PROTECTION_MODE) {
       tmp_str = server.arg("ifttt_eventName_geofence");
-      tmp_str.toCharArray(sensor_config.ifttt_info.ifttt_eventName_geofence,
-                          tmp_str.length() + 1);
+      tmp_str.toCharArray(
+          sensor_config.ifttt_info.ifttt_eventName_geofence,
+          sizeof(sensor_config.ifttt_info.ifttt_eventName_geofence));
     }
 
     break;
   case 2: // Alert_Mode-SERVER
     tmp_str = server.arg("server_ip");
     tmp_str.toCharArray(sensor_config.alert_server_info.server_ip,
-                        tmp_str.length() + 1);
+                        sizeof(sensor_config.alert_server_info.server_ip));
 
     sensor_config.alert_mode = ALERT_WIFI_SERVER;
     break;

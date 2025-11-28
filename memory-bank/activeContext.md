@@ -11,6 +11,8 @@ The project has been successfully revived and compiled after fixing dependency i
     -   Ignored conflicting `nrf_to_nrf` library.
 2.  **Code Updates**:
     -   Updated `lib/alerts/alerts.cpp` to fix `HTTPClient::begin()` deprecation error (added `WiFiClient` argument).
+    -   Improved configuration handling stability.
+    -   Enhanced string formatting safety across the codebase.
 3.  **Version Control**:
     -   Initialized Git repository.
     -   Merged with remote `origin/master` (`https://github.com/anwi-wips/anwi`).

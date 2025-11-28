@@ -104,7 +104,8 @@ void loop() {
       WiFi.macAddress(pkt_info.frame_hdr.destination_address);
       MEMCPY(pkt_info.frame_hdr.source_address, stat_info->bssid, 6);
       pkt_info.frame_hdr.deauth.reason_code = 0;
-      sprintf(bssid_mac, MACSTR, MAC2STR(pkt_info.frame_hdr.bssid_address));
+      snprintf(bssid_mac, sizeof(bssid_mac), MACSTR,
+               MAC2STR(pkt_info.frame_hdr.bssid_address));
       Serial.print("Attacker MAC : ");
       Serial.println(bssid_mac);
       send_alert();
