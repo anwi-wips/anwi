@@ -6,22 +6,19 @@
 #include ".\config\config.h"
 #include "ieee80211_packet.h"
 
-
-extern "C" 
-{
-    #include <user_interface.h>
+extern "C" {
+#include <user_interface.h>
 }
 
 #define DEBUG_PRINT 0
 
 #define DISABLE 0
-#define ENABLE  1
+#define ENABLE 1
 #define MAX_IP_LEN 16
 #define MAX_STRING_INPUT 100
 #define MAX_NETWORK_TYPE_LEN 10
 
-#define IFTTT_ALERT_URL  "http://maker.ifttt.com/trigger/"
-
+#define IFTTT_ALERT_URL "http://maker.ifttt.com/trigger/"
 
 #define INIT_CHANNEL 6
 #define MAX_CHANNEL 11
@@ -31,8 +28,8 @@ extern "C"
 
 #define HEARTBEAT_FREQ 30000
 
-#define IS_EVILTWIN_ATTACK	1
-#define IS_DEAUTH_ATTACK	2
+#define IS_EVILTWIN_ATTACK 1
+#define IS_DEAUTH_ATTACK 2
 #define IS_GEOFENCE_ATTACK 3
 
 #define ALERT_STANDALONE 1
@@ -47,15 +44,13 @@ extern "C"
 #define WEST 3
 #define EAST 4
 
-
-
 extern uint8_t set_channel;
 extern uint16_t deauth_pkt_counter;
 
 extern uint8_t cntr;
 extern uint8_t sensor_id;
 
-extern int config_ROM_Address;   //ROM Address where the config is saved
+extern int config_ROM_Address; // ROM Address where the config is saved
 
 extern unsigned long prevTime;
 extern unsigned long curTime;
@@ -78,78 +73,95 @@ extern uint8_t alert_mode;
 extern uint8_t curr_channel;
 extern bool isWebConfig;
 
-
-struct protection_config
-{
-    bool is_hop_channel_enabled = false;
-    bool is_evil_twin_detect_enabled = true;
-    bool is_deauth_or_disassoc_detect_enabled = true;
+/**
+ * @brief Configuration for protection features.
+ */
+struct protection_config {
+  bool is_hop_channel_enabled = false;
+  bool is_evil_twin_detect_enabled = true;
+  bool is_deauth_or_disassoc_detect_enabled = true;
 };
 
-struct protect_ap_info
-{
-    char SSID[MAX_SSID_LEN];
-    char BSSID_lower[MAC_LEN_FMT];
-    char BSSID_upper[MAC_LEN_FMT];
-    char NETWORK_type[MAX_NETWORK_TYPE_LEN];
+/**
+ * @brief Information about the Access Point to protect.
+ */
+struct protect_ap_info {
+  char SSID[MAX_SSID_LEN];
+  char BSSID_lower[MAC_LEN_FMT];
+  char BSSID_upper[MAC_LEN_FMT];
+  char NETWORK_type[MAX_NETWORK_TYPE_LEN];
 };
 
-extern struct captured_packet_info
-{    
-    int8_t rssi;
-    uint8_t channel;
-    uint8_t type;
-    uint8_t attack_type = -1;
-    bool is_beacon_detected = false;
-    bool is_deauth_detected = false;
-    bool is_disassoc_detected = false;    
-    bool has_ie_vendor_specific = false;
-    bool has_ie_rsn = false;
-    bool is_ssid_hidden;
-    bool is_encrypted;
-    struct ieee80211_frame_header frame_hdr;
-}pkt_info;
+/**
+ * @brief Details of a captured WiFi packet.
+ */
+extern struct captured_packet_info {
+  int8_t rssi;
+  uint8_t channel;
+  uint8_t type;
+  uint8_t attack_type = -1;
+  bool is_beacon_detected = false;
+  bool is_deauth_detected = false;
+  bool is_disassoc_detected = false;
+  bool has_ie_vendor_specific = false;
+  bool has_ie_rsn = false;
+  bool is_ssid_hidden;
+  bool is_encrypted;
+  struct ieee80211_frame_header frame_hdr;
+} pkt_info;
 
-
-struct ifttt_info
-{
-    char ifttt_key[MAX_STRING_INPUT] = "";
-    char ifttt_eventName_eviltwin[MAX_STRING_INPUT] = "";
-    char ifttt_eventName_deauth[MAX_STRING_INPUT] = "";
-    char ifttt_eventName_geofence[MAX_STRING_INPUT] = "";
+/**
+ * @brief IFTTT configuration details.
+ */
+struct ifttt_info {
+  char ifttt_key[MAX_STRING_INPUT] = "";
+  char ifttt_eventName_eviltwin[MAX_STRING_INPUT] = "";
+  char ifttt_eventName_deauth[MAX_STRING_INPUT] = "";
+  char ifttt_eventName_geofence[MAX_STRING_INPUT] = "";
 };
 
-struct alert_server_info
-{
-    char server_ip[MAX_IP_LEN] = "";
+/**
+ * @brief Local alert server configuration.
+ */
+struct alert_server_info {
+  char server_ip[MAX_IP_LEN] = "";
 };
 
-struct nrf_info 
-{
-    uint8_t nrf_channel = 1;
+/**
+ * @brief NRF24 radio configuration.
+ */
+struct nrf_info {
+  uint8_t nrf_channel = 1;
 };
 
-struct connect_ap_info
-{
-    char SSID[MAX_SSID_LEN];
-    char PASSWORD[MAX_SSID_LEN];
+/**
+ * @brief WiFi connection credentials.
+ */
+struct connect_ap_info {
+  char SSID[MAX_SSID_LEN];
+  char PASSWORD[MAX_SSID_LEN];
 };
 
-extern struct sensor_config_info
-{
-    uint8_t isConfigured = -1;
-    uint8_t id = 0;
-    uint8_t sensor_location = -1;
-    struct protect_ap_info protect_ap_info;
-    uint8_t alert_mode = -1;
-    uint8_t operation_mode = -1;
-    struct connect_ap_info connect_ap_info;
-    struct ifttt_info ifttt_info;
-    struct alert_server_info alert_server_info;
-    struct nrf_info nrf_info;
-    struct protection_config protection_config;
-    
-}sensor_config;
+/**
+ * @brief Main configuration structure for the sensor.
+ *
+ * Stores all settings including ID, location, operation mode, alert mode,
+ * and specific module configurations.
+ */
+extern struct sensor_config_info {
+  uint8_t isConfigured = -1;
+  uint8_t id = 0;
+  uint8_t sensor_location = -1;
+  struct protect_ap_info protect_ap_info;
+  uint8_t alert_mode = -1;
+  uint8_t operation_mode = -1;
+  struct connect_ap_info connect_ap_info;
+  struct ifttt_info ifttt_info;
+  struct alert_server_info alert_server_info;
+  struct nrf_info nrf_info;
+  struct protection_config protection_config;
+
+} sensor_config;
 
 const char Sensor_config_web[] PROGMEM = R"=====(
     <!DOCTYPE html>
@@ -382,7 +394,5 @@ const char Sensor_config_web[] PROGMEM = R"=====(
     </body> 
     </html>
   )=====";
-
-
 
 #endif
