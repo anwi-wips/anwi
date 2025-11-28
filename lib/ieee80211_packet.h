@@ -1,7 +1,7 @@
 #ifndef _PACKET_H_
 #define _PACKET_H_
 
-// #include <Arduino.h>
+#include <Arduino.h>
 
 #define SNIFF_BUF2_MAX_SIZE 112
 #define SNIFF_BUF_MAX_SIZE 36

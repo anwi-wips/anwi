@@ -1,6 +1,6 @@
+#include "debug_print.h"
 #include "..\global_vars.h"
 #include "..\ieee80211_packet.h"
-#include "debug.h"
 #include <Arduino.h>
 
 extern "C" {

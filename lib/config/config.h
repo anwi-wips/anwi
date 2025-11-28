@@ -1,13 +1,14 @@
 #ifndef _CONFIG_H_
 #define _CONFIG_H_
 
+#include <Arduino.h>
 void config_sensor_manually();
 void config_sensor_json();
 void get_config_settings();
 void print_config();
 void save_config_settings();
 void config_sensor_web();
-void serve_clients();        
+void serve_clients();
 uint8_t get_configuration_status();
 void clear_configuration();
 #endif
